@@ -1,0 +1,11 @@
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*~
+*.log
+
+household-finance-*.json
+income-*.csv
+expenses-*.csv

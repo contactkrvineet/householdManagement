@@ -1,0 +1,1099 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Household Finance · Vineet &amp; Saroj</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600;9..144,700;9..144,800&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+<div id="app-lock-overlay" class="app-lock-overlay">
+  <div class="lock-card">
+    <div class="lock-brand">
+      <div class="lock-logo">🔐</div>
+      <div class="lock-title-block">
+        <div class="lock-eyebrow">Household Finance · v4</div>
+        <h1 class="lock-title">Vineet <span class="amp">&amp;</span> Saroj</h1>
+      </div>
+    </div>
+    <div id="lock-content"><!-- filled dynamically --></div>
+  </div>
+  <div class="lock-footer">
+    All data stays in this browser · End-to-end encrypted with your master password
+  </div>
+</div>
+
+<div class="container">
+
+  <header>
+    <div class="eyebrow">Household Finance · 2026 · <span style="color:var(--moss);">v6.1 · 🔑 Recovery codes</span></div>
+    <h1>Vineet, Saroj <span class="amp">&amp;</span> Akshara</h1>
+    <div class="meta-row">
+      <span id="today-date">—</span>
+      <span class="vault-indicator" id="vault-status">
+        <span class="vault-dot locked"></span>
+        <span id="vault-status-text">Vault locked</span>
+      </span>
+      <button class="btn-mini" id="vault-toggle">Unlock vault</button>
+      <span class="vault-indicator" id="tier2-status" style="display:none;">
+        <span class="vault-dot locked" id="tier2-dot"></span>
+        <span id="tier2-status-text">Tier 2 locked</span>
+      </span>
+      <button class="btn-mini" id="tier2-toggle" style="display:none;">🔒 Unlock Tier 2</button>
+      <button class="btn-mini" id="privacy-btn" title="Lock vault + blur all sensitive content">🚨 Privacy</button>
+    </div>
+  </header>
+
+  <!-- TAB NAVIGATION -->
+  <div class="tabs" role="tablist">
+    <button class="tab active" data-tab="dashboard">Dashboard</button>
+    <button class="tab" data-tab="income">Income</button>
+    <button class="tab" data-tab="expenses">Expenses</button>
+    <button class="tab" data-tab="usa">🇺🇸 USA</button>
+    <button class="tab" data-tab="canada">🇨🇦 Canada</button>
+    <button class="tab" data-tab="india">🇮🇳 India</button>
+    <button class="tab" data-tab="akshara">👧 Akshara</button>
+    <button class="tab" data-tab="investments">📈 Investments</button>
+    <button class="tab" data-tab="subscriptions">🔁 Subscriptions</button>
+    <button class="tab" data-tab="policies">🛡 Policies</button>
+    <button class="tab" data-tab="documents">📁 Documents</button>
+  </div>
+
+  <!-- ============ DASHBOARD ============ -->
+  <section class="tab-content active" id="dashboard">
+    <div class="section-header">
+      <h2>At a glance</h2>
+      <p>This month's snapshot, upcoming reminders, and quick links. All data stays in this browser.</p>
+    </div>
+    <div class="security-strip" id="security-panel">
+      <div class="security-strip-head">
+        <h3>🛡 Vault Security</h3>
+        <button class="btn-mini" id="toggle-security-details">show settings</button>
+      </div>
+      <div id="security-summary"></div>
+      <div id="security-details" style="display:none;margin-top:14px;">
+        <div class="form-grid">
+          <div>
+            <label class="field-label">Idle auto-lock</label>
+            <select id="sec-idle">
+              <option value="5">5 minutes</option>
+              <option value="15" selected>15 minutes</option>
+              <option value="30">30 minutes</option>
+              <option value="60">60 minutes</option>
+              <option value="0">Disabled</option>
+            </select>
+          </div>
+          <div>
+            <label class="field-label">Lock on tab hide</label>
+            <select id="sec-hide">
+              <option value="yes">Yes (recommended)</option>
+              <option value="no" selected>No</option>
+            </select>
+          </div>
+          <div>
+            <label class="field-label">Clipboard auto-clear</label>
+            <select id="sec-clip">
+              <option value="30" selected>After 30 sec</option>
+              <option value="60">After 60 sec</option>
+              <option value="0">Disabled</option>
+            </select>
+          </div>
+          <div>
+            <label class="field-label">Notifications</label>
+            <select id="sec-notif">
+              <option value="off" selected>Off</option>
+              <option value="on">Enabled (reminders pop up)</option>
+            </select>
+          </div>
+        </div>
+        <div id="security-recs"></div>
+        <div style="margin-top:18px;padding-top:16px;border-top:2px solid var(--rule);">
+          <h4 style="font-family:'Fraunces',serif;color:var(--moss);font-size:15px;margin-bottom:6px;">🔒🔒 Two-tier protection (advanced)</h4>
+          <p style="font-size:13px;color:var(--ink-soft);margin-bottom:12px;line-height:1.5;">Add a <strong>second password</strong> required to access designated tabs. Even if someone has your master password, they cannot decrypt protected tabs without this second key.</p>
+          <div id="tier2-summary"></div>
+          <button class="btn moss btn-sm" id="tier2-manage-btn" style="margin-top:8px;">Manage tier 2 protection</button>
+        </div>
+
+        <div style="margin-top:18px;padding-top:16px;border-top:2px solid var(--rule);">
+          <h4 style="font-family:'Fraunces',serif;color:var(--moss);font-size:15px;margin-bottom:6px;">🔑 Password &amp; recovery</h4>
+          <p style="font-size:13px;color:var(--ink-soft);margin-bottom:12px;line-height:1.5;">Change your master password (data is preserved) or set up a recovery code so you can reset your password without losing data if you forget it.</p>
+          <div id="recovery-summary" style="margin-bottom:10px;"></div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <button class="btn moss btn-sm" id="change-pwd-btn">🔁 Change master password</button>
+            <button class="btn ghost btn-sm" id="recovery-manage-btn">🔑 Manage recovery code</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="dashboard-grid">
+      <div class="stat-card moss">
+        <div class="stat-label">Income · this month</div>
+        <div class="stat-value" id="stat-income">$0</div>
+        <div class="stat-detail" id="stat-income-detail">Vineet $0 · Saroj $0</div>
+      </div>
+      <div class="stat-card terra">
+        <div class="stat-label">Expenses · this month</div>
+        <div class="stat-value" id="stat-expenses">$0</div>
+        <div class="stat-detail" id="stat-expenses-detail">Across 0 transactions</div>
+      </div>
+      <div class="stat-card amber">
+        <div class="stat-label">Net · this month</div>
+        <div class="stat-value" id="stat-net">$0</div>
+        <div class="stat-detail" id="stat-net-detail">—</div>
+      </div>
+      <div class="stat-card sage">
+        <div class="stat-label">Accounts tracked</div>
+        <div class="stat-value" id="stat-accounts">0</div>
+        <div class="stat-detail" id="stat-accounts-detail">USA 0 · CA 0 · IN 0</div>
+      </div>
+    </div>
+
+
+    <div class="dashboard-row">
+      <!-- Calendar -->
+      <div class="panel">
+        <div class="panel-head">
+          <h3>📅 <span id="cal-month-year">Month Year</span></h3>
+          <div class="panel-actions">
+            <button class="btn-mini" id="cal-prev">‹</button>
+            <button class="btn-mini" id="cal-today">Today</button>
+            <button class="btn-mini" id="cal-next">›</button>
+          </div>
+        </div>
+        <div class="calendar" id="calendar"></div>
+        <div class="cal-legend">
+          <span class="dot bill"></span> Bill
+          <span class="dot tax"></span> Tax
+          <span class="dot event"></span> Event
+          <span class="dot birthday"></span> Birthday
+          <span class="dot other"></span> Other
+        </div>
+      </div>
+
+      <!-- Reminders -->
+      <div class="panel">
+        <div class="panel-head">
+          <h3>🔔 Upcoming reminders</h3>
+          <button class="btn amber btn-sm" id="add-reminder-btn">+ Add</button>
+        </div>
+
+        <div class="reminder-form" id="reminder-form" style="display:none;">
+          <div class="form-grid">
+            <div>
+              <label class="field-label">Date</label>
+              <input type="date" id="rem-date">
+            </div>
+            <div>
+              <label class="field-label">Time (optional)</label>
+              <input type="time" id="rem-time" placeholder="—">
+            </div>
+            <div>
+              <label class="field-label">Category</label>
+              <select id="rem-cat">
+                <option value="bill">Bill due</option>
+                <option value="tax">Tax</option>
+                <option value="event">Event</option>
+                <option value="birthday">Birthday</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+            <div class="span-2">
+              <label class="field-label">Title</label>
+              <input type="text" id="rem-title" placeholder="e.g. CIBC Visa payment">
+            </div>
+            <div>
+              <label class="field-label">Recurring</label>
+              <select id="rem-recur">
+                <option value="none">No</option>
+                <option value="monthly">Monthly</option>
+                <option value="yearly">Yearly</option>
+              </select>
+            </div>
+            <div class="form-actions">
+              <button class="btn moss btn-sm" id="save-reminder">Save</button>
+              <button class="btn ghost btn-sm" id="cancel-reminder">Cancel</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="reminder-list" id="reminder-list">
+          <!-- filled by JS -->
+        </div>
+      </div>
+    </div>
+
+    <div class="dashboard-row">
+      <!-- Recent income -->
+      <div class="panel">
+        <div class="panel-head">
+          <h3>💰 Recent income</h3>
+          <a href="#" class="link-action" data-jump="income">View all →</a>
+        </div>
+        <div id="recent-income" class="mini-list"></div>
+      </div>
+
+      <!-- Recent expenses -->
+      <div class="panel">
+        <div class="panel-head">
+          <h3>💸 Recent expenses</h3>
+          <a href="#" class="link-action" data-jump="expenses">View all →</a>
+        </div>
+        <div id="recent-expenses" class="mini-list"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ INCOME ============ -->
+  <section class="tab-content" id="income">
+    <div class="section-header">
+      <h2>Income · month by month</h2>
+      <p>Track salary, freelance, investment, and other income separately for Vineet and Saroj.</p>
+    </div>
+
+    <div class="add-form">
+      <h3>Add income</h3>
+      <div class="form-grid form-grid-7">
+        <div>
+          <label class="field-label">Date</label>
+          <input type="date" id="inc-date">
+        </div>
+        <div>
+          <label class="field-label">Person</label>
+          <select id="inc-person">
+            <option value="Vineet">Vineet</option>
+            <option value="Saroj">Saroj</option>
+            <option value="Joint">Joint</option>
+          </select>
+        </div>
+        <div>
+          <label class="field-label">Source</label>
+          <select id="inc-source">
+            <option value="Salary">Salary</option>
+            <option value="Freelance">Freelance</option>
+            <option value="Investment">Investment</option>
+            <option value="Rental">Rental</option>
+            <option value="Bonus">Bonus</option>
+            <option value="Refund">Refund</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+        <div>
+          <label class="field-label">Amount</label>
+          <input type="number" id="inc-amount" step="0.01" placeholder="0.00">
+        </div>
+        <div>
+          <label class="field-label">Currency</label>
+          <select id="inc-currency">
+            <option value="CAD">CAD</option>
+            <option value="USD">USD</option>
+            <option value="INR">INR</option>
+          </select>
+        </div>
+        <div class="span-2">
+          <label class="field-label">Notes</label>
+          <input type="text" id="inc-notes" placeholder="optional">
+        </div>
+        <div class="form-actions">
+          <button class="btn amber" id="add-income-btn">+ Add</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="filter-row">
+      <span class="field-label">Year:</span>
+      <select id="inc-year-filter"></select>
+      <span class="field-label" style="margin-left:14px;">Person:</span>
+      <select id="inc-person-filter">
+        <option value="all">All</option>
+        <option value="Vineet">Vineet</option>
+        <option value="Saroj">Saroj</option>
+        <option value="Joint">Joint</option>
+      </select>
+      <span class="field-label" style="margin-left:14px;">Currency:</span>
+      <select id="inc-curr-filter">
+        <option value="CAD">CAD</option>
+        <option value="USD">USD</option>
+        <option value="INR">INR</option>
+      </select>
+    </div>
+
+    <div class="panel">
+      <h3>📊 Monthly summary</h3>
+      <table class="data-table" id="income-monthly">
+        <thead>
+          <tr>
+            <th>Month</th>
+            <th class="num">Vineet</th>
+            <th class="num">Saroj</th>
+            <th class="num">Joint</th>
+            <th class="num total">Total</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <div class="panel">
+      <h3>📋 All transactions</h3>
+      <table class="data-table" id="income-list">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Person</th>
+            <th>Source</th>
+            <th>Notes</th>
+            <th class="num">Amount</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <div class="action-bar">
+      <div class="left">All income data stays on this browser.</div>
+      <div>
+        <button class="btn ghost" id="export-income">⤓ Export CSV</button>
+        <button class="btn ghost" id="export-income-json">⤓ Export JSON</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ EXPENSES ============ -->
+  <section class="tab-content" id="expenses">
+    <div class="section-header">
+      <h2>Expenses</h2>
+      <p>Log household expenses by category. Filter by month, currency, or person.</p>
+    </div>
+
+    <div class="add-form">
+      <h3>Add expense</h3>
+      <div class="form-grid form-grid-7">
+        <div>
+          <label class="field-label">Date</label>
+          <input type="date" id="exp-date">
+        </div>
+        <div>
+          <label class="field-label">Paid by</label>
+          <select id="exp-paid">
+            <option value="Vineet">Vineet</option>
+            <option value="Saroj">Saroj</option>
+            <option value="Joint">Joint</option>
+          </select>
+        </div>
+        <div>
+          <label class="field-label">Category</label>
+          <select id="exp-cat">
+            <option>Groceries</option>
+            <option>Rent/Mortgage</option>
+            <option>Utilities</option>
+            <option>Internet/Phone</option>
+            <option>Insurance</option>
+            <option>Transport/Fuel</option>
+            <option>Car</option>
+            <option>Dining</option>
+            <option>Healthcare</option>
+            <option>Education</option>
+            <option>Childcare</option>
+            <option>Entertainment</option>
+            <option>Shopping</option>
+            <option>Travel</option>
+            <option>Subscriptions</option>
+            <option>Gifts</option>
+            <option>Charity</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div>
+          <label class="field-label">Amount</label>
+          <input type="number" id="exp-amount" step="0.01" placeholder="0.00">
+        </div>
+        <div>
+          <label class="field-label">Currency</label>
+          <select id="exp-currency">
+            <option value="CAD">CAD</option>
+            <option value="USD">USD</option>
+            <option value="INR">INR</option>
+          </select>
+        </div>
+        <div class="span-2">
+          <label class="field-label">Description</label>
+          <input type="text" id="exp-desc" placeholder="e.g. Costco run">
+        </div>
+        <div class="form-actions">
+          <button class="btn amber" id="add-expense-btn">+ Add</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="filter-row">
+      <span class="field-label">Month:</span>
+      <select id="exp-month-filter"><option value="all">All</option></select>
+      <span class="field-label" style="margin-left:14px;">Category:</span>
+      <select id="exp-cat-filter"><option value="all">All</option></select>
+      <span class="field-label" style="margin-left:14px;">Paid by:</span>
+      <select id="exp-paid-filter">
+        <option value="all">All</option>
+        <option value="Vineet">Vineet</option>
+        <option value="Saroj">Saroj</option>
+        <option value="Joint">Joint</option>
+      </select>
+      <span class="field-label" style="margin-left:14px;">Currency:</span>
+      <select id="exp-curr-filter">
+        <option value="CAD">CAD</option>
+        <option value="USD">USD</option>
+        <option value="INR">INR</option>
+      </select>
+    </div>
+
+    <div class="exp-summary" id="exp-summary"></div>
+
+    <div class="panel">
+      <h3>📋 All expenses</h3>
+      <table class="data-table" id="expense-list">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Paid by</th>
+            <th>Category</th>
+            <th>Description</th>
+            <th class="num">Amount</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <div class="action-bar">
+      <div class="left">All expense data stays on this browser.</div>
+      <div>
+        <button class="btn ghost" id="export-expenses">⤓ Export CSV</button>
+        <button class="btn ghost" id="export-expenses-json">⤓ Export JSON</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ COUNTRY ACCOUNT TABS ============ -->
+  <!-- Generic template per country -->
+  <section class="tab-content" id="usa"><div data-country="USA"></div></section>
+  <section class="tab-content" id="canada"><div data-country="Canada"></div></section>
+  <section class="tab-content" id="india"><div data-country="India"></div></section>
+
+  <!-- ============ INVESTMENTS ============ -->
+  <section class="tab-content" id="investments">
+    <div class="section-header">
+      <h2>📈 Investments</h2>
+      <p>Track Mutual Funds, ETFs, Fixed Deposits, Recurring Deposits, Stocks, and more across all three countries.</p>
+    </div>
+
+    <div class="add-form">
+      <h3>Add investment</h3>
+      <div class="form-grid form-grid-inv">
+        <div>
+          <label class="field-label">Type *</label>
+          <select id="inv-type">
+            <option>Mutual Fund</option>
+            <option>ETF</option>
+            <option>Fixed Deposit</option>
+            <option>Recurring Deposit</option>
+            <option>Stock</option>
+            <option>Bond</option>
+            <option>REIT</option>
+            <option>Crypto</option>
+            <option>Gold</option>
+            <option>PPF</option>
+            <option>EPF</option>
+            <option>NPS</option>
+            <option>401(k)</option>
+            <option>IRA</option>
+            <option>TFSA</option>
+            <option>RRSP</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div>
+          <label class="field-label">Name / ticker *</label>
+          <input type="text" id="inv-name" placeholder="e.g. VTSAX, HDFC Bank FD">
+        </div>
+        <div>
+          <label class="field-label">Institution</label>
+          <input type="text" id="inv-inst" placeholder="e.g. Vanguard, HDFC">
+        </div>
+        <div>
+          <label class="field-label">Amount invested *</label>
+          <input type="number" id="inv-invested" step="0.01" placeholder="0.00">
+        </div>
+        <div>
+          <label class="field-label">Currency</label>
+          <select id="inv-currency">
+            <option value="CAD">CAD</option>
+            <option value="USD">USD</option>
+            <option value="INR">INR</option>
+          </select>
+        </div>
+        <div>
+          <label class="field-label">Current value</label>
+          <input type="number" id="inv-current" step="0.01" placeholder="leave blank if same">
+        </div>
+        <div>
+          <label class="field-label">Country</label>
+          <select id="inv-country">
+            <option>Canada</option>
+            <option>USA</option>
+            <option>India</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div>
+          <label class="field-label">Purchase date</label>
+          <input type="date" id="inv-date">
+        </div>
+        <div>
+          <label class="field-label">Maturity (FD/RD)</label>
+          <input type="date" id="inv-maturity">
+        </div>
+        <div>
+          <label class="field-label">Rate % (FD/RD/bonds)</label>
+          <input type="number" id="inv-rate" step="0.01" placeholder="e.g. 7.25">
+        </div>
+        <div class="span-2">
+          <label class="field-label">Notes</label>
+          <input type="text" id="inv-notes" placeholder="optional">
+        </div>
+        <div class="form-actions">
+          <button class="btn amber" id="add-inv-btn">+ Add</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="filter-row">
+      <span class="field-label">Type:</span>
+      <select id="inv-type-filter"><option value="all">All</option></select>
+      <span class="field-label" style="margin-left:14px;">Country:</span>
+      <select id="inv-country-filter">
+        <option value="all">All</option>
+        <option>Canada</option>
+        <option>USA</option>
+        <option>India</option>
+      </select>
+      <span class="field-label" style="margin-left:14px;">Currency:</span>
+      <select id="inv-curr-filter">
+        <option value="all">All</option>
+        <option>CAD</option>
+        <option>USD</option>
+        <option>INR</option>
+      </select>
+    </div>
+
+    <div class="doc-stats" id="inv-stats"></div>
+
+    <div class="document-grid" id="inv-grid"></div>
+
+    <div class="action-bar">
+      <div class="left">Track current value periodically to monitor gains.</div>
+      <div><button class="btn ghost" id="export-inv">⤓ Export CSV</button>
+        <button class="btn ghost" id="export-inv-json">⤓ Export JSON</button></div>
+    </div>
+  </section>
+
+  <!-- ============ SUBSCRIPTIONS ============ -->
+  <section class="tab-content" id="subscriptions">
+    <div class="section-header">
+      <h2>🔁 Subscriptions</h2>
+      <p>Track recurring services — Netflix, AWS, gym, news, software, anything billed regularly. See monthly &amp; annual totals.</p>
+    </div>
+
+    <div class="add-form">
+      <h3>Add subscription</h3>
+      <div class="form-grid form-grid-sub">
+        <div>
+          <label class="field-label">Service name *</label>
+          <input type="text" id="sub-name" placeholder="e.g. Netflix">
+        </div>
+        <div>
+          <label class="field-label">Category</label>
+          <select id="sub-cat">
+            <option>Streaming</option>
+            <option>Music</option>
+            <option>Software</option>
+            <option>Cloud Storage</option>
+            <option>News &amp; Media</option>
+            <option>Fitness</option>
+            <option>Education</option>
+            <option>Productivity</option>
+            <option>Gaming</option>
+            <option>Phone / Internet</option>
+            <option>Insurance</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div>
+          <label class="field-label">Cost *</label>
+          <input type="number" id="sub-cost" step="0.01" placeholder="0.00">
+        </div>
+        <div>
+          <label class="field-label">Currency</label>
+          <select id="sub-currency">
+            <option value="CAD">CAD</option>
+            <option value="USD">USD</option>
+            <option value="INR">INR</option>
+          </select>
+        </div>
+        <div>
+          <label class="field-label">Billing cycle</label>
+          <select id="sub-cycle">
+            <option value="monthly">Monthly</option>
+            <option value="yearly">Yearly</option>
+            <option value="quarterly">Quarterly</option>
+            <option value="weekly">Weekly</option>
+            <option value="biennial">Every 2 years</option>
+          </select>
+        </div>
+        <div>
+          <label class="field-label">Next billing</label>
+          <input type="date" id="sub-next">
+        </div>
+        <div>
+          <label class="field-label">Status</label>
+          <select id="sub-status">
+            <option value="active">Active</option>
+            <option value="paused">Paused</option>
+            <option value="cancelled">Cancelled</option>
+            <option value="trial">Free trial</option>
+          </select>
+        </div>
+        <div>
+          <label class="field-label">Paid by</label>
+          <select id="sub-paid">
+            <option>Vineet</option>
+            <option>Saroj</option>
+            <option>Joint</option>
+          </select>
+        </div>
+        <div class="span-2">
+          <label class="field-label">Notes</label>
+          <input type="text" id="sub-notes" placeholder="account email, plan tier...">
+        </div>
+        <div class="form-actions">
+          <button class="btn amber" id="add-sub-btn">+ Add</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="filter-row">
+      <span class="field-label">Status:</span>
+      <select id="sub-status-filter">
+        <option value="all">All</option>
+        <option value="active">Active</option>
+        <option value="paused">Paused</option>
+        <option value="cancelled">Cancelled</option>
+        <option value="trial">Trial</option>
+      </select>
+      <span class="field-label" style="margin-left:14px;">Category:</span>
+      <select id="sub-cat-filter"><option value="all">All</option></select>
+      <span class="field-label" style="margin-left:14px;">Currency:</span>
+      <select id="sub-curr-filter">
+        <option value="all">All</option>
+        <option>CAD</option>
+        <option>USD</option>
+        <option>INR</option>
+      </select>
+    </div>
+
+    <div class="doc-stats" id="sub-stats"></div>
+
+    <div class="document-grid" id="sub-grid"></div>
+
+    <div class="action-bar">
+      <div class="left">Subscription renewals will appear as reminders on your calendar.</div>
+      <div>
+        <button class="btn ghost" id="sync-sub-reminders">🔔 Sync to reminders</button>
+        <button class="btn ghost" id="export-sub">⤓ Export CSV</button>
+        <button class="btn ghost" id="export-sub-json">⤓ Export JSON</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ AKSHARA ============ -->
+  <section class="tab-content" id="akshara">
+    <div class="section-header">
+      <h2>👧 Akshara</h2>
+      <p>Quick reference: personal info, school, health, activities, and emergency contacts. All data stays in this browser.</p>
+    </div>
+
+    <div class="akshara-grid">
+
+      <!-- COLUMN 1: Personal + Emergency contacts -->
+      <div class="profile-col">
+        <div class="profile-card">
+          <div class="profile-avatar" id="ak-avatar">A</div>
+          <h3 id="ak-name">Akshara</h3>
+          <div class="profile-meta">
+            <div><div class="field-label">Born</div><span id="ak-dob">—</span></div>
+            <div><div class="field-label">Age</div><span id="ak-age">—</span></div>
+            <div><div class="field-label">Grade</div><span id="ak-grade">—</span></div>
+            <div><div class="field-label">Blood</div><span id="ak-blood">—</span></div>
+          </div>
+          <button class="btn moss btn-sm" data-edit-ak="personal" style="width:100%;">Edit profile</button>
+        </div>
+
+        <div class="profile-card">
+          <h4>📞 Emergency contacts</h4>
+          <div id="ak-contacts"></div>
+          <button class="btn ghost btn-sm" data-add-ak="contacts" style="width:100%;margin-top:8px;">+ Add contact</button>
+        </div>
+      </div>
+
+      <!-- COLUMN 2: School + Activities -->
+      <div class="profile-col">
+        <div class="profile-card">
+          <h4>🏫 School</h4>
+          <div id="ak-school"></div>
+          <button class="btn ghost btn-sm" data-edit-ak="school" style="width:100%;margin-top:8px;">Edit school info</button>
+        </div>
+
+        <div class="profile-card">
+          <h4>🎨 Activities &amp; interests</h4>
+          <div id="ak-activities"></div>
+          <button class="btn ghost btn-sm" data-add-ak="activities" style="width:100%;margin-top:8px;">+ Add activity</button>
+        </div>
+      </div>
+
+      <!-- COLUMN 3: Health + Notes/milestones -->
+      <div class="profile-col">
+        <div class="profile-card">
+          <h4>🏥 Health &amp; medical</h4>
+          <div id="ak-health"></div>
+          <button class="btn ghost btn-sm" data-edit-ak="health" style="width:100%;margin-top:8px;">Edit health info</button>
+        </div>
+
+        <div class="profile-card">
+          <h4>📝 Notes &amp; milestones</h4>
+          <div id="ak-notes"></div>
+          <button class="btn ghost btn-sm" data-add-ak="notes" style="width:100%;margin-top:8px;">+ Add note</button>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============ POLICIES ============ -->
+  <section class="tab-content" id="policies">
+    <div class="section-header">
+      <h2>🛡 Insurance Policies</h2>
+      <p>Track life, health, term, ULIP, vehicle, and other insurance policies across all three countries.</p>
+    </div>
+
+    <div class="add-form">
+      <h3>Add policy</h3>
+      <div class="form-grid form-grid-pol">
+        <div>
+          <label class="field-label">Policy type *</label>
+          <select id="pol-type">
+            <option>Term Life</option>
+            <option>Whole Life</option>
+            <option>Universal Life</option>
+            <option>ULIP</option>
+            <option>Endowment</option>
+            <option>Money-Back</option>
+            <option>Health</option>
+            <option>Critical Illness</option>
+            <option>Accident</option>
+            <option>Disability</option>
+            <option>Travel</option>
+            <option>Vehicle / Auto</option>
+            <option>Home / Property</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div>
+          <label class="field-label">Policy name *</label>
+          <input type="text" id="pol-name" placeholder="e.g. HDFC Click 2 Protect">
+        </div>
+        <div>
+          <label class="field-label">Insurer</label>
+          <input type="text" id="pol-insurer" placeholder="e.g. HDFC Life, Manulife">
+        </div>
+        <div>
+          <label class="field-label">Policy number</label>
+          <input type="text" id="pol-num">
+        </div>
+        <div>
+          <label class="field-label">Insured person</label>
+          <select id="pol-insured">
+            <option>Vineet</option>
+            <option>Saroj</option>
+            <option>Akshara</option>
+            <option>Joint</option>
+            <option>Family</option>
+          </select>
+        </div>
+        <div>
+          <label class="field-label">Country</label>
+          <select id="pol-country">
+            <option>India</option>
+            <option>Canada</option>
+            <option>USA</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div>
+          <label class="field-label">Sum assured *</label>
+          <input type="number" id="pol-coverage" step="0.01" placeholder="0.00">
+        </div>
+        <div>
+          <label class="field-label">Currency</label>
+          <select id="pol-currency">
+            <option value="INR">INR</option>
+            <option value="CAD">CAD</option>
+            <option value="USD">USD</option>
+          </select>
+        </div>
+        <div>
+          <label class="field-label">Premium</label>
+          <input type="number" id="pol-premium" step="0.01" placeholder="0.00">
+        </div>
+        <div>
+          <label class="field-label">Premium frequency</label>
+          <select id="pol-freq">
+            <option value="yearly">Yearly</option>
+            <option value="half-yearly">Half-yearly</option>
+            <option value="quarterly">Quarterly</option>
+            <option value="monthly">Monthly</option>
+            <option value="single">Single (paid)</option>
+          </select>
+        </div>
+        <div>
+          <label class="field-label">Start date</label>
+          <input type="date" id="pol-start">
+        </div>
+        <div>
+          <label class="field-label">Maturity / end</label>
+          <input type="date" id="pol-end">
+        </div>
+        <div>
+          <label class="field-label">Next premium due</label>
+          <input type="date" id="pol-next">
+        </div>
+        <div>
+          <label class="field-label">Status</label>
+          <select id="pol-status">
+            <option value="active">Active</option>
+            <option value="lapsed">Lapsed</option>
+            <option value="surrendered">Surrendered</option>
+            <option value="paid-up">Paid-up</option>
+            <option value="matured">Matured</option>
+            <option value="claimed">Claimed</option>
+          </select>
+        </div>
+        <div>
+          <label class="field-label">Beneficiary</label>
+          <input type="text" id="pol-beneficiary" placeholder="e.g. Saroj">
+        </div>
+        <div>
+          <label class="field-label">Agent / contact</label>
+          <input type="text" id="pol-agent" placeholder="name + phone">
+        </div>
+        <div class="span-2">
+          <label class="field-label">Notes / riders</label>
+          <input type="text" id="pol-notes" placeholder="accidental death rider, critical illness, etc.">
+        </div>
+        <div class="form-actions">
+          <button class="btn amber" id="add-pol-btn">+ Add policy</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="filter-row">
+      <span class="field-label">Status:</span>
+      <select id="pol-status-filter">
+        <option value="all">All</option>
+        <option value="active">Active</option>
+        <option value="lapsed">Lapsed</option>
+        <option value="surrendered">Surrendered</option>
+        <option value="paid-up">Paid-up</option>
+        <option value="matured">Matured</option>
+        <option value="claimed">Claimed</option>
+      </select>
+      <span class="field-label" style="margin-left:14px;">Insured:</span>
+      <select id="pol-insured-filter">
+        <option value="all">All</option>
+        <option>Vineet</option>
+        <option>Saroj</option>
+        <option>Akshara</option>
+        <option>Joint</option>
+        <option>Family</option>
+      </select>
+      <span class="field-label" style="margin-left:14px;">Country:</span>
+      <select id="pol-country-filter">
+        <option value="all">All</option>
+        <option>India</option>
+        <option>Canada</option>
+        <option>USA</option>
+      </select>
+      <span class="field-label" style="margin-left:14px;">Currency:</span>
+      <select id="pol-curr-filter">
+        <option value="all">All</option>
+        <option>INR</option>
+        <option>CAD</option>
+        <option>USD</option>
+      </select>
+    </div>
+
+    <div class="doc-stats" id="pol-stats"></div>
+
+    <div class="document-grid" id="pol-grid"></div>
+
+    <div class="action-bar">
+      <div class="left">Active policies are eligible for reminder sync.</div>
+      <div>
+        <button class="btn ghost" id="sync-pol-reminders">🔔 Sync premium reminders</button>
+        <button class="btn ghost" id="export-pol">⤓ Export CSV</button>
+        <button class="btn ghost" id="export-pol-json">⤓ Export JSON</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ DOCUMENTS ============ -->
+  <section class="tab-content" id="documents">
+    <div class="section-header">
+      <h2>📁 Documents</h2>
+      <p>Upload and securely store important files (passports, tax forms, statements, school records). Files stay in your browser — they never upload anywhere.</p>
+    </div>
+
+    <div class="upload-area" id="upload-area">
+      <input type="file" id="file-input" multiple style="display:none;">
+      <div class="upload-prompt">
+        <div class="upload-icon">📁</div>
+        <p><strong>Drag files here</strong> or <button class="btn moss btn-sm" id="browse-files">Browse files</button></p>
+        <p class="upload-hint">Any file type · stored in IndexedDB · optionally AES-GCM encrypted</p>
+      </div>
+    </div>
+
+    <div class="upload-options" id="upload-options" style="display:none;">
+      <h4>Configure upload</h4>
+      <div class="form-grid">
+        <div>
+          <label class="field-label">Category</label>
+          <select id="doc-cat">
+            <option>Identity</option>
+            <option>Tax</option>
+            <option>Bank Statement</option>
+            <option>Insurance</option>
+            <option>Property</option>
+            <option>Medical</option>
+            <option>School</option>
+            <option>Receipt</option>
+            <option>Legal</option>
+            <option>Vehicle</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div>
+          <label class="field-label">Country</label>
+          <select id="doc-country">
+            <option>Canada</option>
+            <option>USA</option>
+            <option>India</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div>
+          <label class="field-label">Tags (comma-separated)</label>
+          <input type="text" id="doc-tags" placeholder="e.g. 2025, vineet">
+        </div>
+        <div>
+          <label class="field-label">Encrypt with vault?</label>
+          <select id="doc-encrypt">
+            <option value="no">No (faster, plaintext)</option>
+            <option value="yes">Yes (requires unlocked vault)</option>
+          </select>
+        </div>
+      </div>
+      <div class="upload-files-preview" id="upload-files-preview"></div>
+      <div class="modal-actions">
+        <button class="btn ghost" id="cancel-upload">Cancel</button>
+        <button class="btn amber" id="confirm-upload">⤒ Upload all</button>
+      </div>
+    </div>
+
+    <div class="filter-row">
+      <span class="field-label">Category:</span>
+      <select id="doc-cat-filter"><option value="all">All</option></select>
+      <span class="field-label" style="margin-left:14px;">Country:</span>
+      <select id="doc-country-filter">
+        <option value="all">All</option>
+        <option>Canada</option>
+        <option>USA</option>
+        <option>India</option>
+        <option>Other</option>
+      </select>
+      <span class="field-label" style="margin-left:14px;">Search:</span>
+      <input type="text" id="doc-search" placeholder="name or tag" style="width:auto;padding:6px 10px;font-size:13px;">
+    </div>
+
+    <div class="doc-stats" id="doc-stats"></div>
+
+    <div class="document-grid" id="document-grid"></div>
+  </section>
+
+  <!-- ============ MODALS ============ -->
+  <div class="modal-backdrop" id="vault-modal" style="display:none;">
+    <div class="modal" id="vault-modal-content">
+      <!-- filled dynamically based on state -->
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="account-modal" style="display:none;">
+    <div class="modal modal-wide" id="account-modal-content">
+      <!-- filled dynamically -->
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="recovery-modal" style="display:none;">
+    <div class="modal modal-wide" id="recovery-modal-content"></div>
+  </div>
+
+  <div class="modal-backdrop" id="changepw-modal" style="display:none;">
+    <div class="modal" id="changepw-modal-content"></div>
+  </div>
+
+  <div class="modal-backdrop" id="tier2-modal" style="display:none;">
+    <div class="modal modal-wide" id="tier2-modal-content"></div>
+  </div>
+
+  <div class="modal-backdrop" id="akshara-modal" style="display:none;">
+    <div class="modal modal-wide" id="akshara-modal-content"></div>
+  </div>
+
+  <div class="modal-backdrop" id="confirm-modal" style="display:none;">
+    <div class="modal modal-small">
+      <h3 id="confirm-title">Confirm</h3>
+      <p id="confirm-msg">Are you sure?</p>
+      <div class="modal-actions">
+        <button class="btn ghost" id="confirm-cancel">Cancel</button>
+        <button class="btn moss" id="confirm-ok">OK</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="action-bar" style="margin-top:40px;">
+    <div class="left">⚠ Data lives only in this browser. Export regularly. No cloud sync.</div>
+    <div>
+      <button class="btn ghost" onclick="window.print()">🖨 Print</button>
+      <button class="btn ghost" id="export-all">⤓ Export all (JSON)</button>
+      <button class="btn ghost" id="import-all">⤒ Import (JSON)</button>
+      <input type="file" id="import-file" accept=".json" style="display:none;">
+    </div>
+  </div>
+
+</div>
+<script src="js/app.js"></script>
+</body>
+</html>
